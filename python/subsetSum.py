@@ -1,12 +1,11 @@
 #!/usr/bin/python
+
 """
-DETAILS	: Given an input array of integers and a desired target_sum, 
-	  calculates the number of combinations, of any length, that 
-	  add up to that target_sum. 
-AUTHOR	: r.santanu.das@gmail.com
-USAGE	: python subsetSum.py -n <3,5,6,7...> -t <int> 
-NOTE	: This is an NP problem; http://en.wikipedia.org/wiki/Subset_sum_problem
-	  (Need Python v2.7 or higher)
+DETAILS     : Write a function that given an input array of integers 
+	      and a desired target_sum, returns the number of combinations,
+	      of any length, that add up to that target_sum. 
+AUTHOR      : Santanu Das
+NOTE	    : Python v2.6 or higher required (not v3.x) 
 """
 
 import sys
@@ -21,57 +20,77 @@ def sys_exit(n):
 def subset_sum_recursive(nArr,tSum,pSum):
 
     s = sum(pSum)
-  
+    
     #check if the pSum (partial_sum) is equals to tSum (target_sum)
-    if s == tSum:
-        print "%s => %s" % (pSum,tSum)
+    if s == tSum: 
+        print "{0} => {1}".format(pSum,tSum)
 
     if s >= tSum:
         return # i.e. we have reached the number
 
-    for i in range(len(nArr)):
+    for i in xrange(len(nArr)):
         n = nArr[i]
         remaining = nArr[i+1:]
-        subset_sum_recursive(remaining,tSum,pSum + [n])
+        subset_sum_recursive(remaining,tSum,pSum + [n]) 
 
 
 # Function to start recursion, with an empty list 
-def subset_sum(sArr,tSum):
-
+def subset_sum(tSum,sArr=None,sRng=None):
+    
+    if sRng != None: sArr = sRng
     subset_sum_recursive(sArr,tSum,list())
 
 
+# Configures command-line parameter here 
 def main():
 
-    import argparse
-    parser = argparse.ArgumentParser(description='usage: %prog --opt1 <arg1> --opt2 <arg2>')
+    print
+    import argparse, re
+    parser = argparse.ArgumentParser(description='''Given an input array of integers and a desired
+                                                    target_sum, returns the number of combinations, 
+                                                    of any length, that adds up to that target_sum''')
+    group = parser.add_mutually_exclusive_group(required=True)
 
-    parser.add_argument('-n', '--numbers',
-                        help='The given array of numbers',
-                        dest='sArr', metavar='SARR', required=True)
+    group.add_argument('-n', '--numbers',
+                        help='The given array of numbers (2,3,7..n)',
+                        dest='sArr', metavar='SARR')
+
+    group.add_argument('-r', '--range',
+                        help='The given range ([start,] stop[, step])',
+                        dest='sRng', metavar='SRNG')
 
     parser.add_argument('-t', '--target',
                         help='The targeted sum',
                         dest='tSum', metavar='TSUM', required=True)
 
     opts = parser.parse_args()
-    opts_dict = vars(opts)
-    #print opts_dict
+    opts.tSum = int(opts.tSum)
 
-    for k,v in opts_dict.iteritems():
-        if v is None:
-            print "%s: Value is not substituted!" % k
+    # generate the list from the string
+    if opts.sArr:
+        opts.sArr = map(int, re.split(r"[\W']+", opts.sArr.strip()))
+    else:
+        LST = map(int, re.split(r"\W+", opts.sRng.strip()))
+        if len(LST) > 3:
+            print "Too many argiments...."
             print "Use -h for details\n"
             sys_exit(1)
-        else: pass
+        elif len(LST) in [2,3]:
+            LST[1] += 1
+        else:
+            LST[0] += 1
+        opts.sRng = range(*LST)
 
-    opts.sArr = map(int, opts.sArr.split(','))
-    opts.tSum = int(opts.tSum)
+    # 
+    opts_dict = vars(opts)
+    #print opts_dict
 
     chkVer = subset_sum(**opts_dict)
     sys.exit(not chkVer)
 
 
+# Precessing starts here
 if __name__ == "__main__":
     try: sys.exit(main())
     except KeyboardInterrupt: pass
+    finally: print
