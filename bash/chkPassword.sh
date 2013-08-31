@@ -1,11 +1,14 @@
-    POSE : Check if a password is at least 8 characters long   #
-#           and have at least three (3) of these four(4) things #
-# 	    * UPPERCASE 					#
-#	    * lowercase						#
-#	    * digits						#
-#	    * one of these 4 special characters - !,@,#,$	#
-# AUTHOR  : Santanu Das, London                                 #
-#################################################################
+#!/bin/bash -E
+
+#####################################################################
+# DESCRIPTION : Check if a password is at least 8 characters long   #
+#               and have at least three (3) of these four(4) things #
+# 	        * UPPERCASE 					    #
+#	        * lowercase					    #
+#	        * digits					    #
+#	        * one of these 4 special characters - !,@,#,$	    #
+# AUTHOR      : Santanu Das, London                                 #
+#####################################################################
 
 while :
 do
